@@ -1,0 +1,12 @@
+<div class="select-type">
+  Select form input type:
+  <select (change)="setFormInputType($event.target.value)">
+    <option value=""></option>
+    <option value="text">Text</option>
+    <option value="number">Number</option>
+    <option value="date">Date</option>
+  </select>
+</div>
+<div class="container">
+  <ng-container #outlet></ng-container>
+</div>

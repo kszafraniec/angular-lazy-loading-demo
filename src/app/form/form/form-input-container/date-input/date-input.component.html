@@ -1,0 +1,3 @@
+Date input:
+<input type="text" [value]="date" (change)="changed.emit($event.target.value)">
+<button (click)="setCurrentDate()">Set current date</button>

@@ -1,0 +1,17 @@
+:host {
+  height: 50px;
+  display: flex;
+}
+
+.select-type {
+  height: 50px;
+  border: 1px solid;
+  width: 300px;
+  line-height: 40px;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.container {
+  width: 50%;
+}
