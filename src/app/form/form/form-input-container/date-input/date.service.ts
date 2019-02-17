@@ -6,7 +6,7 @@ import * as moment from 'moment';
 })
 export class DateService {
 
-  getCurrentDateFormatted() {
+  getCurrentDateFormatted(): string {
     return moment().format('ll, h:mm:ss a');
   }
 }

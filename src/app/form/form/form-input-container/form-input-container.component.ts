@@ -4,13 +4,16 @@ import {
   EventEmitter,
   Injector,
   Input,
+  NgModuleFactory,
+  NgModuleFactoryLoader,
+  NgModuleRef,
   Output,
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
 import {TextInputComponent} from './text-input/text-input.component';
 import {NumberInputComponent} from './number-input/number-input.component';
-import {DateInputComponent} from './date-input/date-input.component';
+import {DateInputComponent} from './date-input/date-input/date-input.component';
 import {IFormInput} from './form-input.interface';
 
 enum FormInputType {
@@ -32,9 +35,12 @@ export class FormInputContainerComponent {
 
   @ViewChild('outlet', {read: ViewContainerRef}) outletViewContainerRef: ViewContainerRef;
 
-  constructor(private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector) { }
+  constructor(private injectedComponentFactoryResolver: ComponentFactoryResolver,
+              private injector: Injector,
+              private moduleLoader: NgModuleFactoryLoader) {
+  }
 
-  setFormInputType(type: FormInputType): void {
+  async setFormInputType(type: FormInputType): Promise<void> {
     this.outletViewContainerRef.clear();
 
     if (!type) {
@@ -42,7 +48,17 @@ export class FormInputContainerComponent {
     }
 
     const component: FormInputComponentType = this.getComponent(type);
-    const componentFactory: ComponentFactory<IFormInput> = this.componentFactoryResolver.resolveComponentFactory(component);
+
+    let componentFactoryResolver: ComponentFactoryResolver;
+
+    if (type === FormInputType.DATE) {
+      const dateInputModuleReference: NgModuleRef<any> = await this.getDateInputModuleReference();
+      componentFactoryResolver = dateInputModuleReference.componentFactoryResolver;
+    } else {
+      componentFactoryResolver = this.injectedComponentFactoryResolver;
+    }
+
+    const componentFactory: ComponentFactory<IFormInput> = componentFactoryResolver.resolveComponentFactory(component);
     const componentRef: ComponentRef<IFormInput> = componentFactory.create(this.injector);
 
     componentRef.instance.value = 'initial value';
@@ -51,6 +67,12 @@ export class FormInputContainerComponent {
     });
 
     this.outletViewContainerRef.insert(componentRef.hostView);
+  }
+
+  async getDateInputModuleReference(): Promise<NgModuleRef<any>> {
+    const moduleFactory: NgModuleFactory<any> =
+      await this.moduleLoader.load('src/app/form/form/form-input-container/date-input/date-input.module#DateInputModule');
+    return moduleFactory.create(this.injector);
   }
 
   getComponent(type: FormInputType): FormInputComponentType {

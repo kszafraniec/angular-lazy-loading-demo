@@ -1,13 +1,13 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {IFormInput} from '../form-input.interface';
-import {DateService} from './date.service';
+import {IFormInput} from '../../form-input.interface';
+import {DateService} from '../date.service';
 
 @Component({
-  selector: 'app-date-input',
-  templateUrl: './date-input.component.html',
-  styleUrls: ['./date-input.component.css']
+  selector: 'app-date-input-internal',
+  templateUrl: './date-input-internal.component.html',
+  styleUrls: ['./date-input-internal.component.css']
 })
-export class DateInputComponent implements IFormInput {
+export class DateInputInternalComponent implements IFormInput {
   @Input() set value(value: string) {
     this.setDate(value);
   }

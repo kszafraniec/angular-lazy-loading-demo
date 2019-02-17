@@ -25,7 +25,8 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "lazyModules": ["src/app/form/form/form-input-container/date-input/date-input.module"]
           },
           "configurations": {
             "production": {
