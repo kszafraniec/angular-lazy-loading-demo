@@ -45,6 +45,11 @@ export class FormInputContainerComponent {
     const componentFactory: ComponentFactory<IFormInput> = this.componentFactoryResolver.resolveComponentFactory(component);
     const componentRef: ComponentRef<IFormInput> = componentFactory.create(this.injector);
 
+    componentRef.instance.value = 'initial value';
+    componentRef.instance.changed.subscribe((value: string) => {
+      console.log('New value', value);
+    });
+
     this.outletViewContainerRef.insert(componentRef.hostView);
   }
 
