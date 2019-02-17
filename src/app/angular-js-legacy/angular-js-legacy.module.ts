@@ -5,6 +5,7 @@ import { setAngularJSGlobal, UpgradeModule } from '@angular/upgrade/static';
 import {AngularJsAppModule} from './legacy-code';
 import {AngularJsLegacyComponent} from './angular-js-legacy/angular-js-legacy.component';
 import { AngularJsLegacyDirective } from './angular-js-legacy/angular-js-legacy.directive';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   declarations: [AngularJsLegacyComponent, AngularJsLegacyDirective],
@@ -12,7 +13,12 @@ import { AngularJsLegacyDirective } from './angular-js-legacy/angular-js-legacy.
   exports: [AngularJsLegacyComponent],
   imports: [
     UpgradeModule,
-    CommonModule
+    CommonModule,
+    RouterModule.forChild([
+      {
+        path: '', component: AngularJsLegacyComponent
+      }
+    ])
   ],
   providers: [{ provide: '$scope', useExisting: '$rootScope' }]
 })
