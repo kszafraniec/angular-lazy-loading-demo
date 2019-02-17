@@ -1,0 +1,12 @@
+<div class="select-type">
+  Select widget type:
+  <select (change)="setWidgetType($event.target.value)">
+    <option value=""></option>
+    <option value="weather">Weather</option>
+    <option value="exchange_rates">Exchange Rates</option>
+    <option value="traffic">Traffic</option>
+  </select>
+</div>
+<div class="container">
+  <ng-template appDynamicComponentAnchor></ng-template>
+</div>
