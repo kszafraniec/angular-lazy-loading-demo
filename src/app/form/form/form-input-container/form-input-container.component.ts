@@ -13,16 +13,15 @@ import {
 } from '@angular/core';
 import {TextInputComponent} from './text-input/text-input.component';
 import {NumberInputComponent} from './number-input/number-input.component';
-import {DateInputComponent} from './date-input/date-input/date-input.component';
 import {IFormInput} from './form-input.interface';
+import {DATE_SERVICE, IDateService} from './date-input/date-service.injection-token';
 
 enum FormInputType {
   TEXT = 'text',
-  NUMBER = 'number',
-  DATE = 'date'
+  NUMBER = 'number'
 }
 
-type FormInputComponentType = typeof TextInputComponent | typeof NumberInputComponent | typeof DateInputComponent;
+type FormInputComponentType = typeof TextInputComponent | typeof NumberInputComponent;
 
 @Component({
   selector: 'app-form-input-container',
@@ -49,16 +48,7 @@ export class FormInputContainerComponent {
 
     const component: FormInputComponentType = this.getComponent(type);
 
-    let componentFactoryResolver: ComponentFactoryResolver;
-
-    if (type === FormInputType.DATE) {
-      const dateInputModuleReference: NgModuleRef<any> = await this.getDateInputModuleReference();
-      componentFactoryResolver = dateInputModuleReference.componentFactoryResolver;
-    } else {
-      componentFactoryResolver = this.injectedComponentFactoryResolver;
-    }
-
-    const componentFactory: ComponentFactory<IFormInput> = componentFactoryResolver.resolveComponentFactory(component);
+    const componentFactory: ComponentFactory<IFormInput> = this.injectedComponentFactoryResolver.resolveComponentFactory(component);
     const componentRef: ComponentRef<IFormInput> = componentFactory.create(this.injector);
 
     componentRef.instance.value = 'initial value';
@@ -67,6 +57,15 @@ export class FormInputContainerComponent {
     });
 
     this.outletViewContainerRef.insert(componentRef.hostView);
+
+    this.showCurrentDate();
+  }
+
+  async showCurrentDate() {
+    const dateInputModuleReference: NgModuleRef<any> = await this.getDateInputModuleReference();
+    const service: IDateService = dateInputModuleReference.injector.get<IDateService>(DATE_SERVICE);
+
+    console.log('Current Date', service.getCurrentDateFormatted());
   }
 
   async getDateInputModuleReference(): Promise<NgModuleRef<any>> {
@@ -81,8 +80,6 @@ export class FormInputContainerComponent {
         return TextInputComponent;
       case FormInputType.NUMBER:
         return NumberInputComponent;
-      case FormInputType.DATE:
-        return DateInputComponent;
       default:
         throw new Error('No component for type ' + type);
     }
